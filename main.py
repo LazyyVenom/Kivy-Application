@@ -1,7 +1,8 @@
 import kivy
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
+from kivy.uix.button import ButtonBehavior
+from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 
@@ -30,6 +31,9 @@ class ScreenFive(Screen):
         super(ScreenFive, self).__init__(**kwargs)
         self.add_widget(Label(text='This is Screen 5'))
 
+class ImageButton(ButtonBehavior, Image):
+    pass
+
 class MyApp(App):
     def build(self):
         # Create the screen manager
@@ -52,12 +56,12 @@ class MyApp(App):
         def switch_to_screen(screen_name):
             sm.current = screen_name
         
-        # Create buttons for navigation
-        button1 = Button(text='Button 1', on_release=lambda x: switch_to_screen('screen1'))
-        button2 = Button(text='Button 2', on_release=lambda x: switch_to_screen('screen2'))
-        button3 = Button(text='Button 3', on_release=lambda x: switch_to_screen('screen3'))
-        button4 = Button(text='Button 4', on_release=lambda x: switch_to_screen('screen4'))
-        button5 = Button(text='Button 5', on_release=lambda x: switch_to_screen('screen5'))
+        # Create buttons for navigation with images
+        button1 = ImageButton(source='images/button1_logo.png', on_release=lambda x: switch_to_screen('screen1'))
+        button2 = ImageButton(source='images/button2_logo.png', on_release=lambda x: switch_to_screen('screen2'))
+        button3 = ImageButton(source='images/button3_logo.png', on_release=lambda x: switch_to_screen('screen3'))
+        button4 = ImageButton(source='images/button4_logo.png', on_release=lambda x: switch_to_screen('screen4'))
+        button5 = ImageButton(source='images/button5_logo.png', on_release=lambda x: switch_to_screen('screen5'))
         
         # Add buttons to the navigation layout
         nav_layout.add_widget(button1)
