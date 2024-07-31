@@ -5,7 +5,6 @@ from kivy.uix.button import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Color, Rectangle
 
 class ScreenOne(Screen):
@@ -33,22 +32,18 @@ class ScreenFive(Screen):
         super(ScreenFive, self).__init__(**kwargs)
         self.add_widget(Label(text='This is Screen 5'))
 
-class ImageButton(ButtonBehavior, FloatLayout):
+class ImageButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super(ImageButton, self).__init__(**kwargs)
-        self.bg_color = Color(1, 1, 1, 1)  # Default white background
+        with self.canvas.before:
+            self.bg_color = Color(1, 1, 1, 1)  # Default white background
+            self.rect = Rectangle(size=self.size, pos=self.pos)
+        self.bind(size=self._update_rect, pos=self._update_rect)
         
-        # Create a smaller image and add it to the layout
-        self.inner_image = Image(source=kwargs.get('source'), size_hint=(None, None), size=(50, 50))
-        self.add_widget(self.inner_image)
-
-        # Bind the image size to match the button size (adjust if necessary)
-        self.bind(size=self._update_image, pos=self._update_image)
-
-    def _update_image(self, instance, value):
-        # Center the smaller image within the button
-        self.inner_image.pos = (self.width - self.inner_image.width) / 2, (self.height - self.inner_image.height) / 2
-
+    def _update_rect(self, instance, value):
+        self.rect.size = self.size
+        self.rect.pos = self.pos
+        
     def set_color(self, color):
         with self.canvas.before:
             self.bg_color.r, self.bg_color.g, self.bg_color.b, self.bg_color.a = color
