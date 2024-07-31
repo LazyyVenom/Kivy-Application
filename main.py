@@ -5,7 +5,12 @@ from kivy.uix.button import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.textinput import TextInput
+from kivy.uix.popup import Popup
 from kivy.graphics import Color, Rectangle
+from kivy.uix.button import Button, ButtonBehavior
+from kivy.core.window import Window
+from kivy.uix.scrollview import ScrollView
 
 class ScreenOne(Screen):
     def __init__(self, **kwargs):
@@ -25,12 +30,54 @@ class ScreenThree(Screen):
 class ScreenFour(Screen):
     def __init__(self, **kwargs):
         super(ScreenFour, self).__init__(**kwargs)
-        self.add_widget(Label(text='This is Screen 4'))
+        
+        # Create a vertical layout for the screen
+        self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        
+        # Add a heading
+        self.layout.add_widget(Label(text='Notifications', font_size='24sp', size_hint_y=None, height=50))
+        
+        # Create a scrollable view for notifications
+        self.scroll_view = ScrollView(size_hint=(1, None), size=(Window.width, Window.height - 100))
+        self.notifications_layout = BoxLayout(orientation='vertical', size_hint_y=None)
+        self.notifications_layout.bind(minimum_height=self.notifications_layout.setter('height'))
+        self.scroll_view.add_widget(self.notifications_layout)
+        
+        self.layout.add_widget(self.scroll_view)
+        self.add_widget(self.layout)
+    
+    def add_notification(self, message):
+        notification = BoxLayout(size_hint_y=None, height=50, padding=10)
+        notification.add_widget(Label(text=message))
+        close_button = Button(text='Close', size_hint_x=None, width=100)
+        close_button.bind(on_release=lambda btn: self.notifications_layout.remove_widget(notification))
+        notification.add_widget(close_button)
+        self.notifications_layout.add_widget(notification)
 
 class ScreenFive(Screen):
     def __init__(self, **kwargs):
         super(ScreenFive, self).__init__(**kwargs)
-        self.add_widget(Label(text='This is Screen 5'))
+        
+        # Create a vertical layout for the form
+        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        
+        # Add a heading
+        layout.add_widget(Label(text='Profile', font_size='24sp', size_hint_y=None, height=50))
+        
+        # Add form fields
+        layout.add_widget(Label(text='Name:'))
+        layout.add_widget(TextInput(multiline=False))
+        
+        layout.add_widget(Label(text='Email:'))
+        layout.add_widget(TextInput(multiline=False))
+        
+        layout.add_widget(Label(text='Phone:'))
+        layout.add_widget(TextInput(multiline=False))
+        
+        layout.add_widget(Label(text='Address:'))
+        layout.add_widget(TextInput(multiline=True))
+        
+        self.add_widget(layout)
 
 class ImageButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
@@ -92,6 +139,23 @@ class MyApp(App):
     def switch_to_screen(self, screen_name):
         self.sm.current = screen_name
         self.update_button_colors(screen_name)
+
+        # Test notification when switching to screen 4
+        if screen_name == 'screen4':
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
+            self.sm.get_screen('screen4').add_notification("New Notification")
 
     def update_button_colors(self, active_screen):
         for screen_name, button in self.buttons.items():
